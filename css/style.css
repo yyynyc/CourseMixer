@@ -7,7 +7,26 @@
 	background-color: #000;
 	margin-top: -38px;
 	opacity: 0.8;
-	color: #FFFFF0;
+	color: #FFFFFF;
 	text-align: center;
 	padding-top: 8px;
+}
+.page-title {
+	padding: 0.5em;
+	text-align: center;
+	color: #808080;
+	font-size: 2em;
+}
+
+.course-title {
+	font-size: 2em;
+	color: #808080;
+	text-align: left;
+	margin-top: -0.5em;
+}
+
+.module-title {
+	font-size: 1.2em;
+	color: #808080;
+	text-align: left;
 }

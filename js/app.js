@@ -2,79 +2,166 @@ App = Ember.Application.create({
 	LOG_TRANSITIONS: true
 });
 
-App.ApplicationName = "Prosperity Prana";
+App.ApplicationName = "Course Mixer";
 
-// App.ApplicationAdpater = DS.FixtureAdapter.extend();
-
-// App.ApplicationStore = DS.Store.extend({
-// 	revision: 11,
-// 	adapter: 'DS.FixtureAdapter'
-// });
+App.ApplicationAdapter = DS.FixtureAdapter.extend();
 
 App.Router.map(function() {
-  this.resource('blogs');
-  this.resource('blog', {path: 'blogs/:blog_id'});
+  this.resource('courses');
+  // this.resource('course', {path: 'courses/:course_id'});
+  this.resource('course', {path: 'courses/:course_id'}, function() {
+  	this.resource('modules', function(){
+  		this.resource('module', {path: 'modules/:module_id'});
+  	});
+  });  
 });
 
-App.IndexRoute = Ember.Route.extend({
-  model: function() {
-    return ['red', 'yellow', 'blue'];
-  }
-});
-
-App.BlogsRoute = Ember.Route.extend({
+App.CoursesRoute = Ember.Route.extend({
 	model: function(){
-		return blogs;
+		return this.store.find('course');
 	}
 });
 
-App.BlogRoute = Ember.Route.extend({
+App.CourseRoute = Ember.Route.extend({
 	model: function(pramas){
-		return blogs.findBy('id', pramas.blog_id);
+		return this.store.findBy('id', pramas.course_id);
 	}
 });
 
-// App.Blog = DS.Model.extend({
-// 	title: DS.attr('string'),
-// 	image_url: DS.attr('string'),
-// 	quote: DS.attr('string'),
-// 	thing: DS.attr('string')
-// });
+App.ModulesRoute = Ember.Route.extend({
+	model: function(){
+		var course = this.modelFor('course');
+		return course.modules.find('module');
+	}
+});
 
-// App.BlogsController = Ember.ArrayController.extend();
+App.ModuleRoute = Ember.Route.extend({
+	model: function(){
+		return modules.findBy('id', pramas.module_id);
+	}
+});
+
+App.UsersRoute = Ember.Route.extend({
+	model: function(){
+		return users;
+	}
+});
+
+App.UserRoute = Ember.Route.extend({
+	model: function(){
+		return users.findBy('id', pramas.user_id);
+	}
+});
 
 
-var blogs = [{
+App.CoursesController = Ember.ArrayController.extend({
+	viewedOn: function(){
+		return new Date();
+	}.property()
+});
 
-// App.Blog.FIXTURES = [{
+App.Course = DS.Model.extend({
+	title: DS.attr('string'),
+	image_url: DS.attr('string'),
+	duration: DS.attr('string'),
+	description: DS.attr('string'),
+	modules: DS.hasMany('module')
+});
+
+App.Module = DS.Model.extend({
+	course: DS.belongsTo('course'),
+	name: 'String',
+	level: 'string'
+});
+
+App.Course.FIXTURES = [{
 	id: '1', 
-	// login: "robconery",
 	title: "Imagination",
 	image_url: "/images/flickr_imagination.jpg",
-	quote: "Imagination is the mother of creation.",
-	thing: "Whatever works is fine with me."
+	duration: "3 classes",
+	description: "Visualization, discussions, and activities to foster imagination.",
+	modules: [1, 2, 3, 4, 5, 6, 7, 8]
 },{
 	id: '2',
-	// login: "shanselman",
 	title: "Creativity",
 	image_url: "/images/flickr_creativity.jpg",
-	quote: "Creativity procceeds productivity.",
-	thing: "Just think of that!"
+	duration: "5 classes",
+	description: "Projects and activities to foster creativity.",
+	modules: []
 },{
 	id: '3',
-	// login: "tomdale",
 	title: "Critical Thinking",
 	image_url: "/images/flickr_think.jpg",
-	quote: "Thinking blindly is worth than not thinking at all.",
-	thing: "How critically do you think?"
-}]
+	duration: "4 classes", 
+	description: "Literature and discussion ideas to foster critical thinking skills.",
+	modules: []
+}];
 
-   //  var devs = [
-   //      { login: "robconery", name: "Rob Conery" },
-   //      { login: "shanselman", name: "Scott Hanselman" },
-   //      { login: "tomdale", name: "Tom Dale" },
-   //      { login: "wycats", name: "Yehuda Katz" },
-   //      { login: "jongalloway", name: "Jon Galloway" },
-   //      { login: "haacked", name: "Phil Haack" },
-   // ]
+App.Module.FIXTURES = [{
+	id: 1,
+	course: 1,
+	name: "C1R1",
+	level: "remediation"
+},{
+	id: 2,
+	course: 1,
+	name: "C1R2",
+	first: "remediation"
+},{
+	id: 3,
+	course: 1,
+	name: "C1S1",
+	first: "Simple"
+},{
+	id: 4,
+	course: 1,
+	name: "C1S2",
+	first: "Simple"
+},{
+	id: 5,
+	course: 1,
+	name: "C1M1",
+	first: "Medium"
+},{
+	id: 6,
+	course: 1,
+	name: "C1M2",
+	first: "Medium"
+},{
+	id: 7,
+	course: 1,
+	name: "C1A1",
+	first: "Advanced"
+},{
+	id: 8,
+	course: 1,
+	name: "C1A2",
+	first: "Advanced"
+}];
+
+var users = [{
+	id: 1,
+	first: "Abe"
+},{
+	id: 2,
+	first: "Ben"
+},{
+	id: 3,
+	first: "Charlie"
+},{
+	id: 4,
+	first: "Donna"
+},{
+	id: 5,
+	first: "Ellen"
+},{
+	id: 6,
+	first: "Frank"
+},{
+	id: 7,
+	first: "Gary"
+},{
+	id: 8,
+	first: "Helen"
+}];
 
