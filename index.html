@@ -42,43 +42,38 @@
       <div class="span4 well">
         <h1 class="course-title"> {{title}} </h1>        
         <img {{bind-attr src=image_url}} style="padding: 0 0 1em 0;">
-        <p><strong>Duration:</strong> {{duration}} </p>
-        <p><strong>Description:</strong> {{description}}</p>
-        <p><strong>viewedOn:</strong> {{viewedOn}}</p> 
+        <p><i>{{description}}</i></p>
+        <p><strong>Duration:</strong> {{duration}}</p>
+        <p><strong>Available modules:</strong> {{modules_count}}</p>
+        <p><strong>Available playlists:</strong> {{mixes_count}}</p> 
       </div>
       <div class="span8">
         <!--<ul class="breadcrumb">
           <li>{{#link-to 'courses'}}Courses{{/link-to}} <span class="divider">/</span></li>
           <li class="active">{{title}}</li>
         </ul>--!>
-        {{outlet}}
+        <div class="row">
+          <div class="span1 well">
+            <h2 class="module-title">Modules</h2>
+            <table class="table table-striped">
+              {{#each module in modules}}
+                <tr>
+                  <td>{{#link-to 'module' module}} {{module.name}} {{/link-to}}</td>
+                </tr>
+              {{/each}}
+            </table>
+          </div> 
+          {{outlet}}
+        </div>
       </div> 
     </div>
   </script>
-  <script type="text/x-handlebars" id="modules/index">
-    <h3 class="module-title">Please select a module from the left to view its description.</h3>
-  </script>
-  <script type="text/x-handlebars" id="modules">
-    <div class="row">
-      <div class="span1 well">
-        <h3 class="module-title">Modules</p>
-        <table class="table table-striped">
-          {{#each}}
-            <tr>
-              <td>{{#link-to 'module' this}} {{name}} {{/link-to}}</td>
-            </tr>
-          {{/each}}
-        </table>
-      </div>
-      <div class="span6" style="border-style: outset; border-width: 5px; border-radius: 0.5em; padding: 0em 1em 0em 1em;">
-       {{outlet}}
-      </div>
-    </div>
-  </script>
   <script type="text/x-handlebars" id="module">
-    <h3 class="module-title">Module {{name}}</h3>
-    <p> <strong>Difficulty Level:</strong> {{level}} </p>
-    <p>{{description}}</p>
+    <div class="span6" style="border-style: outset; border-width: 5px; border-radius: 0.5em; padding: 0em 1em 0em 1em;">  
+      <h3 class="module-title">Module {{name}}</h3>
+      <p> <strong>Difficulty Level:</strong> {{level}} </p>
+      <p>{{description}}</p>
+    </div>
   </script>
  
   <script src="js/libs/jquery-1.10.2.js"></script>
