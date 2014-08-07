@@ -40,12 +40,17 @@
   <script type="text/x-handlebars" id="course">
     <div class="row" style="margin-top: 60px;">
       <div class="span4 well">
-        <h1 class="course-title"> {{title}} </h1>        
+        <h1 class="course-title"> {{#link-to 'course'}} {{title}} {{/link-to}} </h1>        
         <img {{bind-attr src=image_url}} style="padding: 0 0 1em 0;">
         <p><i>{{description}}</i></p>
         <p><strong>Duration:</strong> {{duration}}</p>
         <p><strong>Available modules:</strong> {{modules_count}}</p>
-        <p><strong>Available playlists:</strong> {{mixes_count}}</p> 
+        <p><strong>Available playlists:</strong> {{playlists_count}}</p>
+        <p style="text-indent: 1em;">
+          {{#each playlist in playlists}}
+            {{#link-to 'playlist' playlist}} {{playlist.title}} {{/link-to}} | 
+          {{/each}} 
+        </p>
       </div>
       <div class="span8">
         <!--<ul class="breadcrumb">
@@ -53,27 +58,61 @@
           <li class="active">{{title}}</li>
         </ul>--!>
         <div class="row">
-          <div class="span1 well">
+          <div class="span2 well">
             <h2 class="module-title">Modules</h2>
             <table class="table table-striped">
               {{#each module in modules}}
                 <tr>
-                  <td>{{#link-to 'module' module}} {{module.name}} {{/link-to}}</td>
+                  <td>
+                    {{#link-to 'module' module}} {{module.name}} {{/link-to}}
+                  </td>
+                  <td>
+                    +
+                  </td>
                 </tr>
               {{/each}}
             </table>
           </div> 
-          {{outlet}}
+          <div class="span5">
+            <div class="border-outset">
+              {{outlet}}
+            </div >
+            <div class="border-outset">
+              where a playlist goes.
+            </div>
+          </div>
         </div>
       </div> 
     </div>
   </script>
+  <script type="text/x-handlebars" id="course/index">
+    <h3 class="module-title">How to Use Course Mixer:</h3>
+    <p><i>To see the description of a module:</i> click on a module on the left.</p>
+    <p><i>To see the details of playlist:</i> click on a playlist underneath the image. </p>
+  </script>
   <script type="text/x-handlebars" id="module">
-    <div class="span6" style="border-style: outset; border-width: 5px; border-radius: 0.5em; padding: 0em 1em 0em 1em;">  
+      
       <h3 class="module-title">Module {{name}}</h3>
       <p> <strong>Difficulty Level:</strong> {{level}} </p>
       <p>{{description}}</p>
-    </div>
+    
+  </script>
+  <script type="text/x-handlebars" id="playlist">
+    <h3 class="module-title">Playlist #{{id}}: <i>{{title}}</i></h3>
+    <table class="table table-striped">
+      <tr>
+        <th>Module</th>
+        <th>Difficulty Level</th>
+        <th>Difficulty Index</th>
+      </tr>
+        {{#each mixer in mixers}}
+          <tr>
+            <td> {{mixer.module.name}} </td>
+            <td> {{mixer.module.level}} </td>
+            <td> {{mixer.module.level_indicator}} </td>
+          </tr>
+        {{/each}}
+    </table>
   </script>
  
   <script src="js/libs/jquery-1.10.2.js"></script>
@@ -81,7 +120,5 @@
   <script src="js/libs/ember-1.6.1.js"></script>
   <script src="js/libs/ember-data.js"></script>
   <script src="js/app.js"></script>
-  <!-- to activate the test runner, add the "?test" query string parameter -->
-  <script src="tests/runner.js"></script>
 </body>
 </html>
