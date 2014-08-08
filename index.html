@@ -5,7 +5,8 @@
   <title>Course Mixer</title>
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
-  <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+  <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+  <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 </head>
 <body>
   <script type="text/x-handlebars">
@@ -24,18 +25,18 @@
     {{outlet}}
   </script>
   <script type="text/x-handlebars" id="courses">
-    <div class="container">
+    
       <h1 class="page-title">Courses</h1>
-      <div class="row">
+     
         {{#each}}
-          <div class="span4">
+          <div style="width: 300px; height: 250px; vertical-align: baseline; margin: 0 20px 0px 0; display: inline-block;">
             {{#link-to 'course' this }}
-              <img {{bind-attr src=image_url}}/>
+              <img {{bind-attr src=image_url}} class="image">
               <div class="title">{{id}}. {{title}}</div>
             {{/link-to}}
           </div>
         {{/each}}
-    </div> 
+    
   </script>
   <script type="text/x-handlebars" id="course">
     <div class="row" style="margin-top: 60px;">
@@ -53,10 +54,6 @@
         </p>
       </div>
       <div class="span8">
-        <!--<ul class="breadcrumb">
-          <li>{{#link-to 'courses'}}Courses{{/link-to}} <span class="divider">/</span></li>
-          <li class="active">{{title}}</li>
-        </ul>--!>
         <div class="row">
           <div class="span2 well">
             <h2 class="module-title">Modules</h2>
@@ -67,7 +64,7 @@
                     {{#link-to 'module' module}} {{module.name}} {{/link-to}}
                   </td>
                   <td>
-                    +
+                    <a herf="#" {{action "addToPlaylist" this}}><i class="icon-plus-sign icon-large green"></i> </a>
                   </td>
                 </tr>
               {{/each}}
@@ -75,10 +72,10 @@
           </div> 
           <div class="span5">
             <div class="border-outset">
-              {{outlet}}
+              {{render 'createPlaylist' playlist}}              
             </div >
             <div class="border-outset">
-              where a playlist goes.
+              {{outlet}}
             </div>
           </div>
         </div>
@@ -87,13 +84,12 @@
   </script>
   <script type="text/x-handlebars" id="course/index">
     <h3 class="module-title">How to Use Course Mixer:</h3>
-    <p><i>To see the description of a module:</i> click on a module on the left.</p>
-    <p><i>To see the details of playlist:</i> click on a playlist underneath the image. </p>
+    <p class="gray"><i>To see the description of a module:</i> click on a module on the left.</p>
+    <p class="gray"><i>To see the details of playlist:</i> click on a playlist underneath the image. </p>
   </script>
   <script type="text/x-handlebars" id="module">
       
-      <h3 class="module-title">Module {{name}}</h3>
-      <p> <strong>Difficulty Level:</strong> {{level}} </p>
+      <h3 class="module-title">Module: <i>{{name}}</i></h3>
       <p>{{description}}</p>
     
   </script>
@@ -111,8 +107,39 @@
             <td> {{mixer.module.level}} </td>
             <td> {{mixer.module.level_indicator}} </td>
           </tr>
+        {{else}}
+          <tr><td colspan="3"><i> Please add a module to this playlist.</i></td></tr>
         {{/each}}
     </table>
+  </script>
+  <script type="text/x-handlebars" id="createPlaylist">
+    <h3 class="module-title">Create a New Playlist</h3>
+    <p><strong>Title:</strong> {{input type="text" value=playlistTitle placeholder="Write a short title for your playlist" class="input-title"}}
+    <table class="table table-striped">
+      <tr>
+        <th>Module</th>
+        <th>Difficulty Level</th>
+        <th>Difficulty Index</th>
+      </tr>
+      {{#each mixer in mixers}}
+        <tr>
+          <td> {{mixer.module.name}} </td>
+          <td> {{mixer.module.level}} </td>
+          <td> {{mixer.module.level_indicator}} </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="3" class="gray">
+            <i> Click the <i class="icon-plus-sign green"></i> beside a module to add to this playlist.</i>
+          </td>
+        </tr>
+      {{/each}}        
+    </table>
+    <p class="align-right">
+      <button {{action "saveList"}} class="btn btn-small btn-success">
+        Save Playlist
+      </button>
+    </p>
   </script>
  
   <script src="js/libs/jquery-1.10.2.js"></script>

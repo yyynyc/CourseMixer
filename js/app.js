@@ -1,5 +1,6 @@
 App = Ember.Application.create({
-	LOG_TRANSITIONS: true
+	LOG_TRANSITIONS: true,
+	LOG_ACTIVE_GENERATION: true
 });
 
 App.ApplicationName = "Course Mixer";
@@ -50,20 +51,6 @@ App.MixerRoute = Ember.Route.extend({
 	}
 });
 
-App.ModulesController = Ember.ArrayController.extend({
-    needs: "course",
-    course: Ember.computed.alias("controllers.course.model")
-});
-
-App.CourseController = Ember.ObjectController.extend({
-	modules_count: function(){
-		return this.get('modules').get('length');
-	}.property('modules.@each'),
-	playlists_count: function(){
-		return this.get('playlists').get('length');
-	}.property('playlists.@each')
-});
-
 App.Course = DS.Model.extend({
 	title: DS.attr('string'),
 	image_url: DS.attr('string'),
@@ -94,6 +81,50 @@ App.Mixer = DS.Model.extend({
 	module: DS.belongsTo('module', {async: true})
 });
 
+App.CourseController = Ember.ObjectController.extend({
+	modules_count: function(){
+		return this.get('modules').get('length');
+	}.property('modules.@each'),
+	playlists_count: function(){
+		return this.get('playlists').get('length');
+	}.property('playlists.@each'),
+	actions: {
+		addToPlaylist: function(module){
+	    	var	mixers = this.store.get('playlist').get('mixers');
+	    	mixers.createRecord({
+	    		playlist: playlist,
+	    		module: module
+	    	});			
+	    }
+	}
+});
+
+App.CreatePlaylistController = Ember.ArrayController.extend({
+	needs: ["course", "playlist"],
+	course: Ember.computed.alias("controllers.course"),
+	playlist: Ember.computed.alias("controllers.playlist.model"),
+	actions: {
+	    saveList: function(course){
+	    	var title = this.get('playlistTitle');
+	    	var course = this.get('course').get('course_id');
+	    	if (!title) {return false;}
+	    	if (!title.trim()) {return;}
+	    	var playlist = this.store.createRecord('playlist', {
+	    		title: title,
+	    		course: course
+	    	});
+	    	console.log("Submitted " + playlist.get("title") + " to " + playlist.get("course"));
+			this.set('playlistTitle', '');
+			playlist.save();
+			alert('Success! New playlist created');
+	    }
+	}
+});
+
+App.PlaylistController = Ember.ObjectController.extend({
+
+});
+
 App.Course.FIXTURES = [{
 	id: 1, 
 	title: "Imagination",
@@ -118,13 +149,41 @@ App.Course.FIXTURES = [{
 	description: "Literature and discussion ideas to foster critical thinking skills.",
 	modules: [],
 	playlists: []
+},{
+	id: 4,
+	title: "Problem Solving",
+	image_url: "/images/flickr_problem.jpg",
+	duration: "4 classes", 
+	description: "Worksheets and projects to foster problem solving skills.",
+	modules: [],
+	playlists: [],
+	image_attribution: "https://flic.kr/p/nUirWL"
+},{
+	id: 5,
+	title: "Tenacity",
+	image_url: "/images/flickr_tenacity.jpg",
+	duration: "10 classes", 
+	description: "Projects, competitions and challenges to foster tenacity.",
+	modules: [],
+	playlists: [],
+	image_attribution: "https://flic.kr/p/8ZY7Uh"
+
+},{
+	id: 6,
+	title: "Resilience",
+	image_url: "/images/flickr_resilience.jpg",
+	duration: "20 classes", 
+	description: "Problems and challenges to foster Resilience.",
+	modules: [],
+	playlists: [],
+	image_attribution: "https://flic.kr/p/7cKBPn"
 }];
 
 App.Module.FIXTURES = [{
 	id: 1,
 	course: 1,
 	mixers: [1],
-	name: "C1.R1",
+	name: "IMG.Remedial.1",
 	level: "remediation",
 	level_indicator: 100,
 	description: "Lorem ipsum aliquet risus orci curae etiam quam class urna, tempor libero litora laoreet ipsum a pellentesque tristique, et condimentum adipiscing dui tempus duis orci rhoncus suscipit tellus gravida at ipsum."
@@ -132,7 +191,7 @@ App.Module.FIXTURES = [{
 	id: 2,
 	course: 1,
 	mixers: [2],
-	name: "C1.R2",
+	name: "IMG.Remedial.2",
 	level: "remediation",
 	level_indicator: 100,
 	description: "Aenean porta bibendum ornare id tortor dictum auctor praesent est, nam nullam aliquam tempor mattis metus lacus quisque, diam habitasse condimentum senectus a varius vivamus ultricies nec elementum primis amet."
@@ -140,7 +199,7 @@ App.Module.FIXTURES = [{
 	id: 3,
 	course: 1,
 	mixers: [3],
-	name: "C1.S1",
+	name: "IMG.Simple.1",
 	level: "Simple",
 	level_indicator: 300,
 	description: "Quisque metus hac vehicula inceptos mattis per facilisis eu ligula blandit fringilla mi, pulvinar mauris sodales rutrum non ornare convallis interdum varius orci rutrum."
@@ -148,7 +207,7 @@ App.Module.FIXTURES = [{
 	id: 4,
 	course: 1,
 	mixers: [4],
-	name: "C1.S2",
+	name: "IMG.Simple.2",
 	level: "Simple",
 	level_indicator: 300, 
 	description: "Lectus pharetra blandit fermentum massa quisque sem ullamcorper turpis id mollis tristique aliquam, maecenas vehicula augue vel senectus velit litora dapibus ligula tincidunt."
@@ -156,7 +215,7 @@ App.Module.FIXTURES = [{
 	id: 5,
 	course: 1,
 	mixers: [],
-	name: "C1.M1",
+	name: "IMG.Medium.1",
 	level: "Medium",
 	level_indicator: 500,
 	description: "Hendrerit est arcu curabitur malesuada litora nostra dictumst sit ligula quisque, curabitur viverra imperdiet risus enim est id arcu sed scelerisque, curae habitasse integer egestas litora odio sem pulvinar eget."
@@ -164,14 +223,15 @@ App.Module.FIXTURES = [{
 	id: 6,
 	course: 1,
 	mixes: [],
-	name: "C1.M2",
+	name: "IMG.Medium.2",
 	level: "Medium",
 	level_indicator: 500,
+	description: "Lectus pharetra blandit fermentum massa quisque sem ullamcorper turpis id mollis tristique aliquam, maecenas vehicula augue vel senectus velit litora dapibus ligula tincidunt."
 },{
 	id: 7,
 	course: 1,
 	mixers: [],
-	name: "C1.A1",
+	name: "IMG.Advanced.1",
 	level: "Advanced",
 	level_indicator: 700,
 	description: "Level 7. Hendrerit est arcu curabitur malesuada litora nostra dictumst sit ligula quisque, curabitur viverra imperdiet risus enim est id arcu sed scelerisque, curae habitasse integer egestas litora odio sem pulvinar eget."
@@ -179,7 +239,7 @@ App.Module.FIXTURES = [{
 	id: 8,
 	course: 1,
 	mixers: [],
-	name: "C1.A2",
+	name: "IMG.Advanced.2",
 	level: "Advanced",
 	level_indicator: 700,
 	description: "Level 8. Hendrerit est arcu curabitur malesuada litora nostra dictumst sit ligula quisque, curabitur viverra imperdiet risus enim est id arcu sed scelerisque, curae habitasse integer egestas litora odio sem pulvinar eget."

@@ -12,7 +12,7 @@
 	padding-top: 8px;
 }
 .page-title {
-	padding: 0.5em;
+	margin: 2em 0 0.5em 0;
 	text-align: center;
 	color: #808080;
 	font-size: 2em;
@@ -39,6 +39,26 @@
 	margin-bottom: 5px;"
 }
 
+.image {
+	vertical-align: top;
+}
+
+.green {
+	color: green;
+}
+
+.gray {
+	color: #808080;
+}
+
+.align-right {
+	text-align: right;
+}
+
+.input-title{
+	width: 285px;
+	margin-left: 5px;
+}
 .add-to-list{
 	display: none;
 	position: absolute;
