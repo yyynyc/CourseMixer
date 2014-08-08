@@ -64,7 +64,15 @@
                     {{#link-to 'module' module}} {{module.name}} {{/link-to}}
                   </td>
                   <td>
-                    <a herf="#" {{action "addToPlaylist" this}}><i class="icon-plus-sign icon-large green"></i> </a>
+                    <a herf="#" {{action "addToPlaylist" this}}>
+                      <i class="icon-plus-sign icon-large green"></i> 
+                    </a>
+                  </td>
+                </tr>
+              {{else}}
+                <tr>
+                  <td colspan="2">
+                    Sorry, no modules are available in this course.
                   </td>
                 </tr>
               {{/each}}
@@ -72,7 +80,7 @@
           </div> 
           <div class="span5">
             <div class="border-outset">
-              {{render 'createPlaylist' playlist}}              
+              {{partial 'createPlaylist'}}              
             </div >
             <div class="border-outset">
               {{outlet}}
@@ -112,7 +120,7 @@
         {{/each}}
     </table>
   </script>
-  <script type="text/x-handlebars" id="createPlaylist">
+  <script type="text/x-handlebars" id="_createPlaylist">
     <h3 class="module-title">Create a New Playlist</h3>
     <p><strong>Title:</strong> {{input type="text" value=playlistTitle placeholder="Write a short title for your playlist" class="input-title"}}
     <table class="table table-striped">

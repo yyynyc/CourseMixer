@@ -18,7 +18,7 @@ App.Router.map(function() {
 			this.resource('mixers')
 		});  
  	});
-  });  
+  }); 
 });
 
 App.IndexRoute = Ember.Route.extend({
@@ -45,9 +45,9 @@ App.PlaylistsRoute = Ember.Route.extend({
 	}
 });
 
-App.MixerRoute = Ember.Route.extend({
-	model: function(){
-		return this.modelFor('playlist').get('mixers');
+App.ApplicationRoute = Ember.Route.extend({
+	setupController: function() {
+		this.get('controllers.module.model');
 	}
 });
 
@@ -81,47 +81,48 @@ App.Mixer = DS.Model.extend({
 	module: DS.belongsTo('module', {async: true})
 });
 
+App.CoursesController = Ember.ArrayController.extend({
+	sortProperties: ['id']
+});
+
 App.CourseController = Ember.ObjectController.extend({
 	modules_count: function(){
 		return this.get('modules').get('length');
 	}.property('modules.@each'),
+
 	playlists_count: function(){
 		return this.get('playlists').get('length');
 	}.property('playlists.@each'),
+
+	needs: ['course', 'module'],
+	
 	actions: {
 		addToPlaylist: function(module){
-	    	var	mixers = this.store.get('playlist').get('mixers');
-	    	mixers.createRecord({
-	    		playlist: playlist,
+			// var module = this.get('controllers.course.model').get('modules').find('module', params.module_id);
+	    	// var module = this.get('controllers.module.model')
+	    	var	mixer = this.store.createRecord('mixer', {
 	    		module: module
-	    	});			
-	    }
-	}
-});
-
-App.CreatePlaylistController = Ember.ArrayController.extend({
-	needs: ["course", "playlist"],
-	course: Ember.computed.alias("controllers.course"),
-	playlist: Ember.computed.alias("controllers.playlist.model"),
-	actions: {
-	    saveList: function(course){
+	    	});
+	    	mixer.save();			
+	    }, 
+	    saveList: function(){
 	    	var title = this.get('playlistTitle');
-	    	var course = this.get('course').get('course_id');
+	    	var course = this.get('controllers.course');
 	    	if (!title) {return false;}
 	    	if (!title.trim()) {return;}
 	    	var playlist = this.store.createRecord('playlist', {
-	    		title: title,
-	    		course: course
+	    		title: title
 	    	});
-	    	console.log("Submitted " + playlist.get("title") + " to " + playlist.get("course"));
+	    	course.get('playlists').pushObject(playlist);
+	    	console.log("Submitted " + playlist.get("title") + " to playlist #" + playlist.get("id"));
 			this.set('playlistTitle', '');
 			playlist.save();
-			alert('Success! New playlist created');
+			alert('Success! New playlist created.\n\n Check lists underneath the image.');
 	    }
 	}
 });
 
-App.PlaylistController = Ember.ObjectController.extend({
+App.ModuleController = Ember.ObjectController.extend({
 
 });
 
