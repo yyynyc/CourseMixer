@@ -25,48 +25,46 @@
     {{outlet}}
   </script>
   <script type="text/x-handlebars" id="courses">
-    
+    <div class="container">
       <h1 class="page-title">Courses</h1>
-     
-        {{#each}}
-          <div style="width: 300px; height: 250px; vertical-align: baseline; margin: 0 20px 0px 0; display: inline-block;">
-            {{#link-to 'course' this }}
-              <img {{bind-attr src=image_url}} class="image">
-              <div class="title">{{id}}. {{title}}</div>
-            {{/link-to}}
-          </div>
-        {{/each}}
-    
+      {{#each}}
+        <div style="width: 290px; height: 250px; vertical-align: baseline; margin: 0 20px 0px 0; display: inline-block;">
+          {{#link-to 'course' this }}
+            <img {{bind-attr src=image_url}} class="image">
+            <div class="title">{{id}}. {{title}}</div>
+          {{/link-to}}
+        </div>
+      {{/each}}
+    </div>
   </script>
   <script type="text/x-handlebars" id="course">
+    <div class="container">
     <div class="row" style="margin-top: 60px;">
-      <div class="span4 well">
+      <div class="span3 well">
         <h1 class="course-title"> {{#link-to 'course'}} {{title}} {{/link-to}} </h1>        
         <img {{bind-attr src=image_url}} style="padding: 0 0 1em 0;">
         <p><i>{{description}}</i></p>
         <p><strong>Duration:</strong> {{duration}}</p>
         <p><strong>Available modules:</strong> {{modules_count}}</p>
         <p><strong>Available playlists:</strong> {{playlists_count}}</p>
-        <p style="text-indent: 1em;">
+        <div style="margin-left: 1em;">
           {{#each playlist in playlists}}
             {{#link-to 'playlist' playlist}} {{playlist.title}} {{/link-to}} | 
           {{/each}} 
-        </p>
+        </div>
       </div>
       <div class="span8">
         <div class="row">
           <div class="span2 well">
             <h2 class="module-title">Modules</h2>
             <table class="table table-striped">
-              {{#each module in modules}}
+              {{#each module in modules itemController=module}}
                 <tr>
                   <td>
                     {{#link-to 'module' module}} {{module.name}} {{/link-to}}
                   </td>
                   <td>
-                    <a herf="#" {{action "addToPlaylist" this}}>
-                      <i class="icon-plus-sign icon-large green"></i> 
-                    </a>
+                    {{input type="checkbox" class="toggle" checked=module.isAdded}}
                   </td>
                 </tr>
               {{else}}
@@ -89,6 +87,7 @@
         </div>
       </div> 
     </div>
+    </div>
   </script>
   <script type="text/x-handlebars" id="course/index">
     <h3 class="module-title">How to Use Course Mixer:</h3>
@@ -96,10 +95,8 @@
     <p class="gray"><i>To see the details of playlist:</i> click on a playlist underneath the image. </p>
   </script>
   <script type="text/x-handlebars" id="module">
-      
-      <h3 class="module-title">Module: <i>{{name}}</i></h3>
-      <p>{{description}}</p>
-    
+    <h3 class="module-title">Module: <i>{{name}}</i></h3>
+    <p>{{description}}</p>
   </script>
   <script type="text/x-handlebars" id="playlist">
     <h3 class="module-title">Playlist #{{id}}: <i>{{title}}</i></h3>
@@ -122,23 +119,23 @@
   </script>
   <script type="text/x-handlebars" id="_createPlaylist">
     <h3 class="module-title">Create a New Playlist</h3>
-    <p><strong>Title:</strong> {{input type="text" value=playlistTitle placeholder="Write a short title for your playlist" class="input-title"}}
+    <p><strong>Title:</strong> {{input type="text" value=playlistTitle placeholder="A short title for your playlist" class="input-title"}}</p>
     <table class="table table-striped">
       <tr>
         <th>Module</th>
         <th>Difficulty Level</th>
         <th>Difficulty Index</th>
       </tr>
-      {{#each mixer in mixers}}
+      {{#each module in addedModules}}
         <tr>
-          <td> {{mixer.module.name}} </td>
-          <td> {{mixer.module.level}} </td>
-          <td> {{mixer.module.level_indicator}} </td>
+          <td> {{module.name}} </td>
+          <td> {{module.level}} </td>
+          <td> {{module.level_indicator}} </td>
         </tr>
       {{else}}
         <tr>
           <td colspan="3" class="gray">
-            <i> Click the <i class="icon-plus-sign green"></i> beside a module to add to this playlist.</i>
+            <i> Click the <!--<i class="icon-plus-sign green"></i>--> checkbox beside a module to add to this playlist.</i>
           </td>
         </tr>
       {{/each}}        

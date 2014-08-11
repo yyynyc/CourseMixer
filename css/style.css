@@ -55,9 +55,15 @@
 	text-align: right;
 }
 
-.input-title{
+.input-title {
 	width: 285px;
 	margin-left: 5px;
+}
+
+.input-modules {
+	width: 255px;
+	margin-left: 5px;
+	height: 20px;
 }
 .add-to-list{
 	display: none;

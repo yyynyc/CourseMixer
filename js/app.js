@@ -66,7 +66,8 @@ App.Module = DS.Model.extend({
 	name: DS.attr('string'),
 	level: DS.attr('string'),
 	level_indicator: DS.attr('number'),
-	description: DS.attr('string')
+	description: DS.attr('string'),
+	isClicked: DS.attr('boolean')
 });
 
 App.Playlist = DS.Model.extend({
@@ -94,25 +95,37 @@ App.CourseController = Ember.ObjectController.extend({
 		return this.get('playlists').get('length');
 	}.property('playlists.@each'),
 
-	needs: ['course', 'module'],
+	addedModules: function() {
+		return this.get('modules').filterBy('isAdded', true);
+	}.property('modules.@each.isAdded'),
+
+	needs: ['course'],
 	
 	actions: {
-		addToPlaylist: function(module){
-			// var module = this.get('controllers.course.model').get('modules').find('module', params.module_id);
-	    	// var module = this.get('controllers.module.model')
-	    	var	mixer = this.store.createRecord('mixer', {
-	    		module: module
-	    	});
-	    	mixer.save();			
-	    }, 
 	    saveList: function(){
 	    	var title = this.get('playlistTitle');
-	    	var course = this.get('controllers.course');
+	    	var course = this.get('model');
 	    	if (!title) {return false;}
 	    	if (!title.trim()) {return;}
 	    	var playlist = this.store.createRecord('playlist', {
 	    		title: title
 	    	});
+	    	// playlist.save();
+	    	this.get('addedModules').forEach(function(item){
+	    		console.log(item.get('name'));
+	    		// var playlist = this.get('playlist');
+	    		// var mixer = this.store.createRecord('mixer', {
+		    		// playlist: playlist,
+		    		// module: item
+	    		// });
+	    		// mixer.save();
+	    		// console.log(mixer.get('module').get('name'))
+	    		// playlist.get('mixers').pushObject(mixer);
+	    		// playlist.save();
+	    		// item.get('mixers').pushObject(mixer);
+	    		item.set('isAdded', '');
+	    		item.save();
+	    	});	 
 	    	course.get('playlists').pushObject(playlist);
 	    	console.log("Submitted " + playlist.get("title") + " to playlist #" + playlist.get("id"));
 			this.set('playlistTitle', '');
@@ -123,7 +136,16 @@ App.CourseController = Ember.ObjectController.extend({
 });
 
 App.ModuleController = Ember.ObjectController.extend({
-
+	isAdded: function(key, value){
+		var model = this.get('model');
+		if (value === undefined){
+			return model.get('isAdded');
+		} else {
+			model.set('isAdded', value);
+			model.save;
+			return value;
+		}	
+	}.property('modle.isAdded')
 });
 
 App.Course.FIXTURES = [{
@@ -133,7 +155,7 @@ App.Course.FIXTURES = [{
 	duration: "3 classes",
 	description: "Visualization, discussions, and activities to foster imagination.",
 	modules: [1, 2, 3, 4, 5, 6, 7, 8],
-	playlists: [1, 2, 3]
+	playlists: [1]
 },{
 	id: 2,
 	title: "Creativity",
@@ -184,6 +206,7 @@ App.Module.FIXTURES = [{
 	id: 1,
 	course: 1,
 	mixers: [1],
+	isClicked: "",
 	name: "IMG.Remedial.1",
 	level: "remediation",
 	level_indicator: 100,
@@ -192,6 +215,7 @@ App.Module.FIXTURES = [{
 	id: 2,
 	course: 1,
 	mixers: [2],
+	isClicked: "",
 	name: "IMG.Remedial.2",
 	level: "remediation",
 	level_indicator: 100,
@@ -200,6 +224,7 @@ App.Module.FIXTURES = [{
 	id: 3,
 	course: 1,
 	mixers: [3],
+	isClicked: "",
 	name: "IMG.Simple.1",
 	level: "Simple",
 	level_indicator: 300,
@@ -208,6 +233,7 @@ App.Module.FIXTURES = [{
 	id: 4,
 	course: 1,
 	mixers: [4],
+	isClicked: "",
 	name: "IMG.Simple.2",
 	level: "Simple",
 	level_indicator: 300, 
@@ -216,6 +242,7 @@ App.Module.FIXTURES = [{
 	id: 5,
 	course: 1,
 	mixers: [],
+	isClicked: "",
 	name: "IMG.Medium.1",
 	level: "Medium",
 	level_indicator: 500,
@@ -224,6 +251,7 @@ App.Module.FIXTURES = [{
 	id: 6,
 	course: 1,
 	mixes: [],
+	isClicked: "",
 	name: "IMG.Medium.2",
 	level: "Medium",
 	level_indicator: 500,
@@ -232,6 +260,7 @@ App.Module.FIXTURES = [{
 	id: 7,
 	course: 1,
 	mixers: [],
+	isClicked: "",
 	name: "IMG.Advanced.1",
 	level: "Advanced",
 	level_indicator: 700,
@@ -240,6 +269,7 @@ App.Module.FIXTURES = [{
 	id: 8,
 	course: 1,
 	mixers: [],
+	isClicked: "",
 	name: "IMG.Advanced.2",
 	level: "Advanced",
 	level_indicator: 700,
@@ -251,16 +281,6 @@ App.Playlist.FIXTURES = [{
 	course: 1,
 	mixers: [1,2,3,4],
 	title: "I Can Fly"
-},{
-	id: 2,
-	course: 1,
-	mixers: [],
-	title: "City in Space"
-}, {
-	id: 3,
-	course: 1,
-	mixers: [],
-	title: "Garden under Sea"
 }]
 
 App.Mixer.FIXTURES = [{
