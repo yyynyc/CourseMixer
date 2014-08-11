@@ -61,16 +61,31 @@
     </div>
   </script>
   <script type="text/x-handlebars" id="course/index">
+    <ul class="breadcrumb small-font">
+      <li>{{#link-to 'courses'}}Courses{{/link-to}} <span class="divider">/</span></li>
+      <li class="active">{{title}}</li>
+    </ul>
     <h3 class="module-title">How to Use Course Mixer:</h3>
     <p class="gray"><i>To see the description of a module:</i> click on a module on the left.</p>
     <p class="gray"><i>To see the details of playlist:</i> click on a playlist underneath the image. </p>
   </script>
   <script type="text/x-handlebars" id="module">
+    <ul class="breadcrumb small-font">
+      <li>{{#link-to 'courses'}}Courses{{/link-to}} <span class="divider">/</span></li>
+      <li>{{#link-to 'course'}}{{course.title}}{{/link-to}} <span class="divider">/</span></li>
+      <li class="active">Module: {{name}}</li>
+    </ul>
     <h3 class="module-title">Module: <i>{{name}}</i></h3>
     <p>{{description}}</p>
   </script>
   <script type="text/x-handlebars" id="playlist">
+    <ul class="breadcrumb small-font">
+      <li>{{#link-to 'courses'}}Courses{{/link-to}} <span class="divider">/</span></li>
+      <li>{{#link-to 'course'}}{{course.title}}{{/link-to}} <span class="divider">/</span></li>
+      <li class="active">Playlist: {{title}}</li>
+    </ul>
     <h3 class="module-title">Playlist #{{id}}: <i>{{title}}</i></h3>
+
     <table class="table table-striped">
       <tr>
         <th>Module</th>
@@ -93,7 +108,7 @@
     </table>
   </script>
   <script type="text/x-handlebars" id="_createPlaylist">
-    <h3 class="module-title">Create a New Playlist</h3>
+    <h2 class="new-playlist-title">Create a New Playlist</h2>
     <p><strong>Title:</strong> {{input type="text" value=playlistTitle placeholder="A short title for your playlist" class="input-title"}}</p>
     <table class="table table-striped">
       <tr>
@@ -155,6 +170,7 @@
         {{/each}}
       </table>
   </script>
+  <script type="text/x-handlebars" id="_breadcrumbs"></script>
  
   <script src="js/libs/jquery-1.10.2.js"></script>
   <script src="js/libs/handlebars-1.1.2.js"></script>

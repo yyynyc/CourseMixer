@@ -148,7 +148,14 @@ App.ModuleController = Ember.ObjectController.extend({
 			model.save;
 			return value;
 		}	
-	}.property('modle.isAdded')
+	}.property('modle.isAdded'),
+	needs: ['course'],
+	course: Ember.computed.alias('controllers.course.model')
+});
+
+App.PlaylistController = Ember.ObjectController.extend({
+	needs: ['course'],
+	course: Ember.computed.alias('controllers.course.model')
 });
 
 App.Course.FIXTURES = [{
