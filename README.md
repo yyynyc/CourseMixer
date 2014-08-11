@@ -1,37 +1,17 @@
-starter-kit
-===========
-
-A starter kit for Ember
-
-Your Ember.js project is almost ready! Here's how to get started:
-
-- Start writing your app in `js/app.js`.
-
-- Describe your application HTML in `index.html`.
-
-- During development, you can link to `js/libs/ember-*.js` to get the
-  unminified version of Ember.js.
-
-- Add CSS to `css/style.css`.
-
-- Open `index.html` in your browser.
-
-Tests
-=====
-
-This starter kit comes with an integration test sample, written for QUnit runner. 
-
-You can run the tests by opening the `index.html?test` page in your browser.
-
-The test is located in the `tests/tests.js` file. You can see how such an 
-integration test should be written, using QUnit assertions and ember-testing helpers.
-
-For more information about ember-testing package see [ember-testing](http://emberjs.com/guides/testing/integration/).
-
-For more information about the QUnit testing framework, see [QUnit](http://qunitjs.com/).
-
-Contact
-====
-
-
-[www.emberjs.com](http://www.emberjs.com)
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Course Mixer Read Me</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+</head>
+<body>
+	<h1>Course Mixer (An Ember Application Demo)</h1>
+	<hr>
+	<p> Course Mixer is a demo application using Ember.js V1.6.1 and Ember Data V1.0.8-beta.</p>
+	<p> All of the javascript is stored in 'js/app.js', and all of the template is stored in 'index.html'.</p>
+	<p> Course mixer allows teachers to pick and choose various modules in curriculum and create their customized playlist.</p>
+</body>
+</html>

@@ -5,7 +5,7 @@ App = Ember.Application.create({
 
 App.ApplicationName = "Course Mixer";
 
-App.ApplicationAdapter = DS.FixtureAdapter.extend();
+App.ApplicationAdapter = DS.CustomFixtureAdapter.extend();
 
 App.Router.map(function() {
   this.resource('courses');
@@ -116,20 +116,19 @@ App.CourseController = Ember.ObjectController.extend({
 	    	for (i=0; i<list_module_count; i++){
 	    		var selected_module = addedModules[i];
 	    		var mixer = this.store.createRecord('mixer', {
-		    		playlist: playlist,
+	    			playlist: playlist,
 		    		module: selected_module
 	    		});	
 	    		mixer.save();
-	    		console.log(mixer.get('playlist'));    		
+	    		selected_module.set('isAdded', undefined); 		
 	    		playlist.get('mixers').then(function(mixers){
 	    			mixers.pushObject(mixer);
+	    			playlist.save();
 	    		});	    		
 	    		selected_module.get('mixers').then(function(mixers){
-	    			mixers.pushObject(mixer);
+	    			mixers.pushObject(mixer);	    				    		
+	    			selected_module.save();
 	    		});
-	    		selected_module.set('isAdded', '');	    		
-	    		playlist.save();
-	    		selected_module.save();
 	    	};
 	    	course.get('playlists').pushObject(playlist);
 			this.set('playlistTitle', '');

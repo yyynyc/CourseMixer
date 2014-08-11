@@ -6,7 +6,6 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
   <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
-  <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 </head>
 <body>
   <script type="text/x-handlebars">
@@ -28,7 +27,7 @@
     <div class="container">
       <h1 class="page-title">Courses</h1>
       {{#each}}
-        <div style="width: 290px; height: 250px; vertical-align: baseline; margin: 0 20px 0px 0; display: inline-block;">
+        <div class="course-index">
           {{#link-to 'course' this }}
             <img {{bind-attr src=image_url}} class="image">
             <div class="title">{{id}}. {{title}}</div>
@@ -41,40 +40,12 @@
     <div class="container">
     <div class="row" style="margin-top: 60px;">
       <div class="span3 well">
-        <h1 class="course-title"> {{#link-to 'course'}} {{title}} {{/link-to}} </h1>        
-        <img {{bind-attr src=image_url}} style="padding: 0 0 1em 0;">
-        <p><i>{{description}}</i></p>
-        <p><strong>Duration:</strong> {{duration}}</p>
-        <p><strong>Available modules:</strong> {{modules_count}}</p>
-        <p><strong>Available playlists:</strong> {{playlists_count}}</p>
-        <div style="margin-left: 1em;">
-          {{#each playlist in playlists}}
-            {{#link-to 'playlist' playlist}} {{playlist.title}} {{/link-to}} | 
-          {{/each}} 
-        </div>
+        {{partial 'course_box'}}
       </div>
       <div class="span8">
         <div class="row">
           <div class="span2 well">
-            <h2 class="module-title">Modules</h2>
-            <table class="table table-striped">
-              {{#each module in modules itemController=module}}
-                <tr>
-                  <td>
-                    {{#link-to 'module' module}} {{module.name}} {{/link-to}}
-                  </td>
-                  <td>
-                    {{input type="checkbox" class="toggle" checked=module.isAdded}}
-                  </td>
-                </tr>
-              {{else}}
-                <tr>
-                  <td colspan="2">
-                    Sorry, no modules are available in this course.
-                  </td>
-                </tr>
-              {{/each}}
-            </table>
+            {{partial 'module_list'}}
           </div> 
           <div class="span5">
             <div class="border-outset">
@@ -106,14 +77,18 @@
         <th>Difficulty Level</th>
         <th>Difficulty Index</th>
       </tr>
-        {{#each mixer in mixers}}
+        {{#each mixers}}
           <tr>
-            <td> {{mixer.module.name}} </td>
-            <td> {{mixer.module.level}} </td>
-            <td> {{mixer.module.level_indicator}} </td>
+            <td> {{module.name}} </td>
+            <td> {{module.level}} </td>
+            <td> {{module.level_indicator}} </td>
           </tr>
         {{else}}
-          <tr><td colspan="3"><i> Please add a module to this playlist.</i></td></tr>
+          <tr>
+            <td colspan="3" class="gray">
+              <i>Sorry, no module was added to this playlist.</i>
+            </td>
+          </tr>
         {{/each}}
     </table>
   </script>
@@ -135,7 +110,7 @@
       {{else}}
         <tr>
           <td colspan="3" class="gray">
-            <i> Click the <!--<i class="icon-plus-sign green"></i>--> checkbox beside a module to add to this playlist.</i>
+            <i>Click the checkbox beside each module to add to this playlist.</i>
           </td>
         </tr>
       {{/each}}        
@@ -146,11 +121,46 @@
       </button>
     </p>
   </script>
+  <script type="text/x-handlebars" id='_course_box'>
+    <h1 class="course-title"> {{#link-to 'course'}} {{title}} {{/link-to}} </h1>        
+    <img {{bind-attr src=image_url}} style="padding: 0 0 1em 0;">
+    <p><i>{{description}}</i></p>
+    <p><strong>Duration:</strong> {{duration}}</p>
+    <p><strong>Available modules:</strong> {{modules_count}}</p>
+    <p><strong>Available playlists:</strong> {{playlists_count}}</p>
+    <div style="margin-left: 1em;">
+      {{#each playlist in playlists}}
+        {{#link-to 'playlist' playlist}} {{playlist.title}} {{/link-to}} | 
+      {{/each}} 
+    </div>
+  </script>
+  <script type="text/x-handlebars" id="_module_list">
+    <h2 class="module-title">Modules</h2>
+      <table class="table table-striped">
+        {{#each module in modules itemController=module}}
+          <tr>
+            <td>
+              {{#link-to 'module' module}} {{module.name}} {{/link-to}}
+            </td>
+            <td>
+              {{input type="checkbox" class="toggle" checked=module.isAdded}}
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="2">
+              Sorry, no modules are available in this course.
+            </td>
+          </tr>
+        {{/each}}
+      </table>
+  </script>
  
   <script src="js/libs/jquery-1.10.2.js"></script>
   <script src="js/libs/handlebars-1.1.2.js"></script>
   <script src="js/libs/ember-1.6.1.js"></script>
   <script src="js/libs/ember-data.js"></script>
+  <script src="js/libs/custom-fixture-adapter.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
