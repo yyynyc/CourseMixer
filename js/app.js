@@ -155,7 +155,12 @@ App.ModuleController = Ember.ObjectController.extend({
 
 App.PlaylistController = Ember.ObjectController.extend({
 	needs: ['course'],
-	course: Ember.computed.alias('controllers.course.model')
+	course: Ember.computed.alias('controllers.course.model'),
+	difficulty_level: function() {
+		return this.get('modules').getEach('level_indicator').reduce(function(accum, item) {
+			return accum + item;
+		}, 0);
+	}.property('modules.@each.level_indicator')
 });
 
 App.Course.FIXTURES = [{

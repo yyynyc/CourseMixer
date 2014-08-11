@@ -92,19 +92,23 @@
         <th>Difficulty Level</th>
         <th>Difficulty Index</th>
       </tr>
-        {{#each mixers}}
-          <tr>
-            <td> {{module.name}} </td>
-            <td> {{module.level}} </td>
-            <td> {{module.level_indicator}} </td>
-          </tr>
-        {{else}}
-          <tr>
-            <td colspan="3" class="gray">
-              <i>Sorry, no module was added to this playlist.</i>
-            </td>
-          </tr>
-        {{/each}}
+      {{#each mixers}}
+        <tr>
+          <td> {{module.name}} </td>
+          <td> {{module.level}} </td>
+          <td> {{module.level_indicator}} </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="3" class="gray">
+            <i>Sorry, no module was added to this playlist.</i>
+          </td>
+        </tr>
+      {{/each}}
+      <!--<tr>
+        <td colspan="2">Difficulty Index: </td>
+        <td></td>
+      </tr>-->
     </table>
   </script>
   <script type="text/x-handlebars" id="_createPlaylist">
