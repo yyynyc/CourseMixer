@@ -108,26 +108,30 @@ App.CourseController = Ember.ObjectController.extend({
 	    	if (!title) {return false;}
 	    	if (!title.trim()) {return;}
 	    	var playlist = this.store.createRecord('playlist', {
-	    		title: title
+	    		title: title, 
+	    		course: course
 	    	});
-	    	// playlist.save();
-	    	this.get('addedModules').forEach(function(item){
-	    		console.log(item.get('name'));
-	    		// var playlist = this.get('playlist');
-	    		// var mixer = this.store.createRecord('mixer', {
-		    		// playlist: playlist,
-		    		// module: item
-	    		// });
-	    		// mixer.save();
-	    		// console.log(mixer.get('module').get('name'))
-	    		// playlist.get('mixers').pushObject(mixer);
-	    		// playlist.save();
-	    		// item.get('mixers').pushObject(mixer);
-	    		item.set('isAdded', '');
-	    		item.save();
-	    	});	 
+	    	var addedModules = this.get('addedModules');
+	    	var list_module_count = addedModules.get('length');
+	    	for (i=0; i<list_module_count; i++){
+	    		var selected_module = addedModules[i];
+	    		var mixer = this.store.createRecord('mixer', {
+		    		playlist: playlist,
+		    		module: selected_module
+	    		});	
+	    		mixer.save();
+	    		console.log(mixer.get('playlist'));    		
+	    		playlist.get('mixers').then(function(mixers){
+	    			mixers.pushObject(mixer);
+	    		});	    		
+	    		selected_module.get('mixers').then(function(mixers){
+	    			mixers.pushObject(mixer);
+	    		});
+	    		selected_module.set('isAdded', '');	    		
+	    		playlist.save();
+	    		selected_module.save();
+	    	};
 	    	course.get('playlists').pushObject(playlist);
-	    	console.log("Submitted " + playlist.get("title") + " to playlist #" + playlist.get("id"));
 			this.set('playlistTitle', '');
 			playlist.save();
 			alert('Success! New playlist created.\n\n Check lists underneath the image.');
@@ -250,7 +254,7 @@ App.Module.FIXTURES = [{
 },{
 	id: 6,
 	course: 1,
-	mixes: [],
+	mixers: [],
 	isClicked: "",
 	name: "IMG.Medium.2",
 	level: "Medium",
