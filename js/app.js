@@ -89,11 +89,11 @@ App.CoursesController = Ember.ArrayController.extend({
 App.CourseController = Ember.ObjectController.extend({
 	modules_count: function(){
 		return this.get('modules').get('length');
-	}.property('modules.@each'),
+	}.property('modules.length'),
 
 	playlists_count: function(){
 		return this.get('playlists').get('length');
-	}.property('playlists.@each'),
+	}.property('playlists.length'),
 
 	addedModules: function() {
 		return this.get('modules').filterBy('isAdded', true);
@@ -157,10 +157,10 @@ App.PlaylistController = Ember.ObjectController.extend({
 	needs: ['course'],
 	course: Ember.computed.alias('controllers.course.model'),
 	difficulty_level: function() {
-		return this.get('modules').getEach('level_indicator').reduce(function(accum, item) {
-			return accum + item;
+		return this.get('mixers').getEach('module.level_indicator').reduce(function(accum, module) {
+			return accum + module;
 		}, 0);
-	}.property('modules.@each.level_indicator')
+	}.property('mixers.@each.module.level_indicator')
 });
 
 App.Course.FIXTURES = [{

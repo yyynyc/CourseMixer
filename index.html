@@ -105,10 +105,10 @@
           </td>
         </tr>
       {{/each}}
-      <!--<tr>
+      <tr>
         <td colspan="2">Difficulty Index: </td>
-        <td></td>
-      </tr>-->
+        <td>{{difficulty_level}}</td>
+      </tr>
     </table>
   </script>
   <script type="text/x-handlebars" id="_createPlaylist">
@@ -132,7 +132,12 @@
             <i>Click the checkbox beside each module to add to this playlist.</i>
           </td>
         </tr>
-      {{/each}}        
+      {{/each}} 
+      <tr>
+        <td colspan="3" class="gray">
+          <i>{{difficulty_level}}</i>
+        </td>
+      </tr>       
     </table>
     <p class="align-right">
       <button {{action "saveList"}} class="btn btn-small btn-success">
