@@ -33,6 +33,17 @@ App.CoursesRoute = Ember.Route.extend({
 	}
 });
 
+// App.CourseRoute = Ember.Route.extend({
+// 	model: function(params){
+// 		debugger;
+// 		return this.store.find('course', params.course_id).then(function(course){
+// 			return course.get('playlists').then(function(){
+// 				return course;
+// 			});
+// 		});
+// 	}
+// });
+
 App.ModulesRoute = Ember.Route.extend({
 	model: function(){
 		return this.modelFor('course').get('modules');		
@@ -45,19 +56,16 @@ App.PlaylistsRoute = Ember.Route.extend({
 	}
 });
 
-App.ApplicationRoute = Ember.Route.extend({
-	setupController: function() {
-		this.get('controllers.module.model');
-	}
-});
-
 App.Course = DS.Model.extend({
 	title: DS.attr('string'),
 	image_url: DS.attr('string'),
 	duration: DS.attr('string'),
 	description: DS.attr('string'),
 	modules: DS.hasMany('module', {async: true}), 
-	playlists: DS.hasMany('playlist', {async: true})
+	playlists: DS.hasMany('playlist', {async: true}),
+	playlistsDidChange: function(){
+		debugger
+	}.observes('playlists')
 });
 
 App.Module = DS.Model.extend({
@@ -87,17 +95,21 @@ App.CoursesController = Ember.ArrayController.extend({
 });
 
 App.CourseController = Ember.ObjectController.extend({
-	modules_count: function(){
-		return this.get('modules').get('length');
-	}.property('modules.length'),
+	modulesCount: Ember.computed.readOnly('modules.length'),
 
-	playlists_count: function(){
-		return this.get('playlists').get('length');
-	}.property('playlists.length'),
+	playlistsCount: Ember.computed.readOnly('playlists.length'),
 
 	addedModules: function() {
 		return this.get('modules').filterBy('isAdded', true);
 	}.property('modules.@each.isAdded'),
+
+	addedModulesCount: Ember.computed.readOnly('addedModules.length'),
+
+   	difficultyLevel: function() {
+		return this.get('addedModules').getEach('level_indicator').reduce(function(accum, module) {
+			return accum + module;
+		}, 0);
+	}.property('addedModules.@each.level_indicator'),
 
 	needs: ['course'],
 	
@@ -148,7 +160,7 @@ App.ModuleController = Ember.ObjectController.extend({
 			model.save;
 			return value;
 		}	
-	}.property('modle.isAdded'),
+	}.property('model.isAdded'),
 	needs: ['course'],
 	course: Ember.computed.alias('controllers.course.model')
 });
@@ -156,7 +168,10 @@ App.ModuleController = Ember.ObjectController.extend({
 App.PlaylistController = Ember.ObjectController.extend({
 	needs: ['course'],
 	course: Ember.computed.alias('controllers.course.model'),
-	difficulty_level: function() {
+
+	addedModulesCount: Ember.computed.readOnly('mixers.length'),
+
+	difficultyLevel: function() {
 		return this.get('mixers').getEach('module.level_indicator').reduce(function(accum, module) {
 			return accum + module;
 		}, 0);

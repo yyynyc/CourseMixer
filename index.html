@@ -105,10 +105,16 @@
           </td>
         </tr>
       {{/each}}
-      <tr>
-        <td colspan="2">Difficulty Index: </td>
-        <td>{{difficulty_level}}</td>
-      </tr>
+      {{#if mixers}}
+        <tr style="font-weight: bold;">
+          <td colspan="2">Number of Modules: </td>
+          <td>{{addedModulesCount}}</td>
+        </tr> 
+        <tr style="font-weight: bold;">
+          <td colspan="2">Difficulty Index: </td>
+          <td>{{difficultyLevel}}</td>
+        </tr> 
+      {{/if}}  
     </table>
   </script>
   <script type="text/x-handlebars" id="_createPlaylist">
@@ -127,17 +133,22 @@
           <td> {{module.level_indicator}} </td>
         </tr>
       {{else}}
-        <tr>
+        <tr >
           <td colspan="3" class="gray">
             <i>Click the checkbox beside each module to add to this playlist.</i>
           </td>
         </tr>
       {{/each}} 
-      <tr>
-        <td colspan="3" class="gray">
-          <i>{{difficulty_level}}</i>
-        </td>
-      </tr>       
+      {{#if addedModules}}
+        <tr style="font-weight: bold;">
+          <td colspan="2">Number of Modules: </td>
+          <td>{{addedModulesCount}}</td>
+        </tr> 
+        <tr style="font-weight: bold;">
+          <td colspan="2">Difficulty Index: </td>
+          <td>{{difficultyLevel}}</td>
+        </tr> 
+      {{/if}}     
     </table>
     <p class="align-right">
       <button {{action "saveList"}} class="btn btn-small btn-success">
@@ -150,8 +161,8 @@
     <img {{bind-attr src=image_url}} style="padding: 0 0 1em 0;">
     <p><i>{{description}}</i></p>
     <p><strong>Duration:</strong> {{duration}}</p>
-    <p><strong>Available modules:</strong> {{modules_count}}</p>
-    <p><strong>Available playlists:</strong> {{playlists_count}}</p>
+    <p><strong>Available modules:</strong> {{modulesCount}}</p>
+    <p><strong>Available playlists:</strong> {{playlistsCount}}</p>
     <div style="margin-left: 1em;">
       {{#each playlist in playlists}}
         {{#link-to 'playlist' playlist}} {{playlist.title}} {{/link-to}} | 
