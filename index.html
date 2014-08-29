@@ -92,11 +92,11 @@
         <th>Difficulty Level</th>
         <th>Difficulty Index</th>
       </tr>
-      {{#each mixers}}
+      {{#each mixer in mixers}}
         <tr>
-          <td> {{module.name}} </td>
-          <td> {{module.level}} </td>
-          <td> {{module.level_indicator}} </td>
+          <td> {{mixer.module.name}} </td>
+          <td> {{mixer.module.level}} </td>
+          <td> {{mixer.module.level_indicator}} </td>
         </tr>
       {{else}}
         <tr>
